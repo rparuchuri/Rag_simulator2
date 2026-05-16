@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG (Retrieval-Augmented Generation) Simulator</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-panel: #1e293b;
+            --bg-light: #f8fafc;
+            --primary: #38bdf8;
+            --primary-hover: #0ea5e9;
+            --text-dark: #e2e8f0;
+            --text-light: #334155;
+            --accent: #818cf8;
+            --accent-glow: rgba(129, 140, 248, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            overflow: hidden;
+        }
+
+        /* Sidebar / Controls */
+        .sidebar {
+            width: 350px;
+            background-color: var(--bg-panel);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #334155;
+            overflow-y: auto;
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            background-color: #0f172a;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        button:disabled {
+            background: #334155;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .knowledge-item {
+            background: #0f172a;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Main Dashboard */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            overflow-y: auto;
+        }
+
+        .header {
+            background-color: #fff;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pipeline {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .step {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.5s ease;
+            opacity: 0.5;
+            transform: translateY(10px);
+        }
+
+        .step.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .step-number {
+            background-color: var(--bg-panel);
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .step-content {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        /* Vector Visualizer */
+        .vector-map {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .vector-dot {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .vector-dot.relevant {
+            background-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+            transform: scale(1.1);
+        }
+
+        .vector-dot.queried {
+            background-color: var(--primary);
+            border: 2px dashed #0c4a6e;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+            margin-left: auto;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR: Controls & Data -->
+    <div class="sidebar">
+        <h1>RAG Simulator</h1>
+        
+        <div class="section">
+            <label>Knowledge Base (Documents)</label>
+            <div id="knowledge-list">
+                <!-- Dynamically populated -->
+            </div>
+            <button onclick="addDocPrompt()" style="margin-top: 10px; width: 100%; padding: 8px; font-size: 0.85rem;">+ Add Document</button>
+        </div>
+
+        <div class="section">
+            <label>Ask a Question</label>
+            <textarea id="user-question" rows="4" placeholder="e.g., What is LangChain?">What does Acme Corp do?</textarea>
+            
+            <label>Select Model (LLM)</label>
+            <select id="llm-model">
+                <option>GPT-4o (Standard)</option>
+                <option>Claude 3.5 Sonnet</option>
+                <option>Llama 3 70B</option>
+            </select>
+
+            <button id="btn-run" onclick="runRAGSimulation()">Run RAG Process</button>
+        </div>
+    </div>
+
+    <!-- MAINBOARD: Steps in the Pipeline -->
+    <div class="main">
+        <div class="header">
+            <span style="font-size: 0.9rem; color: #64748b;">Pipeline Status: <strong id="status-text" style="color: #0f172a;">Idle</strong></span>
+            <div class="spinner" id="loader"></div>
+        </div>
+
+        <div class="pipeline">
+            <!-- STEP 1: QUERY & EMBEDDING -->
+            <div class="step" id="step-1">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Query & Text Embedding</div>
+                </div>
+                <div class="step-content">
+                    <p>The user's query is processed by an <strong>Embedding Model</strong> to convert text into numerical vectors (coordinates) that capture its semantic meaning.</p>
+                    <div style="margin-top: 15px; font-size: 0.85rem;">
+                        <strong>Query Vector Map:</strong>
+                        <div class="vector-map">
+                            <div class="vector-dot queried">[0.2]</div>
+                            <div class="vector-dot queried">[0.8]</div>
+                            <div class="vector-dot queried">[-0.4]</div>
+                            <div class="vector-dot queried">[0.1]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2: VECTOR RETRIEVAL -->
+            <div class="step" id="step-2">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Vector Search & Retrieval</div>
+                </div>
+                <div class="step-content">
+                    <p>The system runs a similarity search in the <strong>Vector Database</strong> to find stored document chunks that match the query's vectors.</p>
+                    <div style="margin-top: 15px; font-size: 0.85rem;">
+                        <strong>Vector Database State (High-Dimensional Space):</strong>
+                        <div class="vector-map" id="vector-db-map">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: CONTEXT AUGMENTATION -->
+            <div class="step" id="step-3">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Augmentation (Context Injection)</div>
+                </div>
+                <div class="step-content">
+                    <p>The system retrieves the most relevant chunks and constructs an enriched <strong>Prompt</strong>: <code>[System Context] + [Retrieved Chunks] + [User Query]</code></p>
+                    <div style="margin-top: 15px; font-size: 0.85rem; background: #e2e8f0; padding: 10px; border-radius: 4px;">
+                        <pre id="augmented-prompt" style="white-space: pre-wrap; word-break: break-all; font-family: monospace;">Augmented prompt will appear here...</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 4: GENERATION -->
+            <div class="step" id="step-4">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <div class="step-title">LLM Generation</div>
+                </div>
+                <div class="step-content">
+                    <p>The Large Language Model (LLM) reads the augmented prompt and synthesizes a highly accurate, context-aware answer, avoiding hallucinations.</p>
+                    <div style="margin-top: 15px; font-size: 0.95rem; font-weight: bold; color: var(--accent);" id="llm-response">
+                        Final response will appear here...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample Knowledge Base documents
+        let knowledgeBase = [
+            "Acme Corp was founded in 2020 by Jane Doe. It provides AI-powered workflow automation.",
+            "Our company values are: 1. Transparency, 2. Customer-centricity, 3. Innovation.",
+            "The Acme support email is support@acme.com and their headquarters are in Austin, Texas.",
+            "Retrieval-Augmented Generation (RAG) is a technique that grounds language models on external knowledge bases."
+        ];
+
+        function renderDocs() {
+            const list = document.getElementById('knowledge-list');
+            list.innerHTML = '';
+            knowledgeBase.forEach((doc, idx) => {
+                list.innerHTML += `<div class="knowledge-item"><strong>Doc ${idx + 1}:</strong> ${doc.substring(0, 50)}...</div>`;
+            });
+            renderVectorDB();
+        }
+
+        function addDocPrompt() {
+            const text = prompt("Enter new document text for the knowledge base:");
+            if (text) {
+                knowledgeBase.push(text);
+                renderDocs();
+            }
+        }
+
+        function renderVectorDB() {
+            const map = document.getElementById('vector-db-map');
+            map.innerHTML = '';
+            knowledgeBase.forEach((doc, idx) => {
+                map.innerHTML += `
+                    <div class="vector-dot" title="${doc}" onclick="alert('Doc ${idx + 1}: \\n\\n' + this.title)">
+                        D${idx + 1}
+                    </div>
+                `;
+            });
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function runRAGSimulation() {
+            const btn = document.getElementById('btn-run');
+            const loader = document.getElementById('loader');
+            const status = document.getElementById('status-text');
+
+            btn.disabled = true;
+            loader.style.display = 'inline-block';
+
+            // Reset step opacities
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`step-${i}`).classList.remove('active');
+            }
+
+            // --- STEP 1 ---
+            status.textContent = "Embedding Query...";
+            document.getElementById('step-1').classList.add('active');
+            await sleep(1200);
+
+            // --- STEP 2 ---
+            status.textContent = "Retrieving Vectors...";
+            document.getElementById('step-2').classList.add('active');
+            
+            // Randomly select a relevant document based on user input for simulation purposes
+            const dots = document.querySelectorAll('#vector-db-map .vector-dot');
+            const randomRelevantIdx = Math.floor(Math.random() * dots.length);
+            dots.forEach(d => d.classList.remove('relevant'));
+            dots[randomRelevantIdx].classList.add('relevant');
+
+            await sleep(1500);
+
+            // --- STEP 3 ---
+            status.textContent = "Injecting Context...";
+            document.getElementById('step-3').classList.add('active');
+            
+            const question = document.getElementById('user-question').value;
+            const context = knowledgeBase[randomRelevantIdx];
+            const promptBox = document.getElementById('augmented-prompt');
+            promptBox.textContent = `SYSTEM: Answer the question using ONLY the provided context.
+
+CONTEXT:
+${context}
+
+QUESTION:
+${question}
+
+ANSWER:`;
+
+            await sleep(1800);
+
+            // --- STEP 4 ---
+            status.textContent = "Generating Response...";
+            document.getElementById('step-4').classList.add('active');
+
+            // Simulated RAG generation based on our sample data
+            let responseText = "Based on the provided documents, Acme Corp is an AI-powered workflow automation company founded in 2020 by Jane Doe.";
+            if (question.toLowerCase().includes("values")) {
+                responseText = "Based on the provided documents, the company values are: 1. Transparency, 2. Customer-centricity, 3. Innovation.";
+            } else if (question.toLowerCase().includes("support") || question.toLowerCase().includes("email")) {
+                responseText = "According to the documents, you can reach Acme support at support@acme.com.";
+            }
+
+            document.getElementById('llm-response').textContent = responseText;
+
+            // Done
+            btn.disabled = false;
+            loader.style.display = 'none';
+            status.textContent = "Simulation Complete";
+        }
+
+        // Initial setup
+        renderDocs();
+    </script>
+</body>
+</html>
