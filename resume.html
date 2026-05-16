@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Renukadevi Paruchuri — Product & Cloud Leader</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #020b18;
+    --panel: #040f1e;
+    --panel2: #060d1a;
+    --accent: #00d4ff;
+    --accent2: #0080ff;
+    --accent3: #00ffaa;
+    --gold: #ffd700;
+    --text: #c8e4f8;
+    --muted: #4a7a9b;
+    --border: rgba(0,212,255,0.2);
+    --glow: 0 0 20px rgba(0,212,255,0.3);
+    --glow2: 0 0 40px rgba(0,212,255,0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 400;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed; width: 8px; height: 8px;
+    background: var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, background 0.2s;
+    box-shadow: 0 0 12px var(--accent), 0 0 24px var(--accent);
+  }
+  .cursor-ring {
+    position: fixed; width: 32px; height: 32px;
+    border: 1px solid rgba(0,212,255,0.5); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.2s, height 0.2s, opacity 0.2s;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* Scanline */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none; z-index: 1;
+    animation: scanmove 8s linear infinite;
+  }
+  @keyframes scanmove {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 40px; }
+  }
+
+  /* Main wrapper */
+  .resume {
+    position: relative; z-index: 2;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 30px 80px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    position: relative;
+    padding: 50px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 50px;
+    overflow: hidden;
+  }
+  .header::before {
+    content: 'SYSTEM ONLINE';
+    position: absolute; top: 16px; right: 0;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--accent3);
+    letter-spacing: 4px; opacity: 0.6;
+    animation: blink 2s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .header-grid { display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: end; }
+
+  .name-block {}
+  .name-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--accent3);
+    letter-spacing: 6px; margin-bottom: 12px;
+    opacity: 0.8;
+  }
+  .name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 900;
+    letter-spacing: 2px;
+    line-height: 1;
+    color: #fff;
+    text-shadow: 0 0 30px rgba(0,212,255,0.5);
+    margin-bottom: 10px;
+  }
+  .name span { color: var(--accent); }
+  .title-line {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(11px, 2vw, 14px);
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .tagline {
+    font-size: 16px;
+    color: var(--text);
+    max-width: 600px;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .contact-block {
+    display: flex; flex-direction: column; gap: 10px;
+    align-items: flex-end;
+    min-width: 220px;
+  }
+  .contact-item {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px; color: var(--muted);
+    transition: color 0.2s;
+  }
+  .contact-item:hover { color: var(--accent); }
+  .contact-icon {
+    width: 28px; height: 28px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: var(--border);
+    margin-bottom: 50px;
+    border: 1px solid var(--border);
+  }
+  .stat-cell {
+    background: var(--panel);
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .stat-cell:hover { background: rgba(0,212,255,0.05); }
+  .stat-cell::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .stat-cell:hover::before { opacity: 1; }
+  .stat-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 32px; font-weight: 700;
+    color: var(--accent);
+    text-shadow: var(--glow);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ── SECTION ── */
+  .section { margin-bottom: 50px; }
+  .section-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 28px;
+  }
+  .section-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--accent3);
+    letter-spacing: 3px; opacity: 0.7;
+    min-width: 60px;
+  }
+  .section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 5px;
+    color: #fff;
+    text-transform: uppercase;
+  }
+  .section-line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    opacity: 0.4;
+  }
+
+  /* ── SKILLS GRID ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .skill-group {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 20px;
+    position: relative;
+    transition: border-color 0.3s, transform 0.3s;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+  }
+  .skill-group:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--glow2);
+  }
+  .skill-group-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px; font-weight: 600;
+    color: var(--accent); letter-spacing: 3px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .skill-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--text);
+    background: rgba(0,212,255,0.06);
+    border: 1px solid rgba(0,212,255,0.15);
+    padding: 3px 10px;
+    transition: all 0.2s;
+  }
+  .skill-tag:hover {
+    background: rgba(0,212,255,0.15);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* ── EXPERIENCE ── */
+  .exp-list { display: flex; flex-direction: column; gap: 3px; }
+  .exp-item {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 3px solid transparent;
+    padding: 0;
+    transition: border-color 0.3s;
+    overflow: hidden;
+  }
+  .exp-item.active { border-left-color: var(--accent); }
+  .exp-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    padding: 18px 22px;
+    cursor: pointer;
+    align-items: start;
+  }
+  .exp-header:hover { background: rgba(0,212,255,0.04); }
+  .exp-company {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px; font-weight: 600;
+    color: #fff; letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .exp-role {
+    font-size: 14px; color: var(--accent);
+    font-weight: 500; letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+  .exp-meta {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--muted);
+    letter-spacing: 1px;
+  }
+  .exp-date {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px; color: var(--muted);
+    text-align: right; white-space: nowrap;
+  }
+  .exp-toggle {
+    font-size: 16px; color: var(--accent);
+    transition: transform 0.3s;
+    margin-top: 2px;
+  }
+  .exp-item.active .exp-toggle { transform: rotate(45deg); }
+  .exp-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s;
+    padding: 0 22px;
+  }
+  .exp-item.active .exp-body {
+    max-height: 500px;
+    padding: 4px 22px 20px;
+  }
+  .exp-bullets { list-style: none; }
+  .exp-bullets li {
+    font-size: 14px; color: var(--text);
+    line-height: 1.6;
+    padding: 4px 0;
+    padding-left: 18px;
+    position: relative;
+    font-weight: 300;
+  }
+  .exp-bullets li::before {
+    content: '▸';
+    position: absolute; left: 0;
+    color: var(--accent3); font-size: 10px;
+    top: 7px;
+  }
+
+  /* ── CERTIFICATIONS ── */
+  .cert-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .cert-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  }
+  .cert-card::before {
+    content: ''; position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,212,255,0.05) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .cert-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--glow2); }
+  .cert-card:hover::before { opacity: 1; }
+  .cert-icon {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 22px; color: var(--accent);
+    text-shadow: var(--glow);
+    margin-bottom: 10px;
+  }
+  .cert-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px; font-weight: 600;
+    color: #fff; line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .cert-issuer {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--accent3);
+    letter-spacing: 2px;
+  }
+
+  /* ── EDUCATION ── */
+  .edu-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 28px 30px;
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: center; gap: 20px;
+    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%);
+    transition: border-color 0.3s;
+  }
+  .edu-card:hover { border-color: var(--accent); }
+  .edu-degree {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px; font-weight: 600;
+    color: #fff; letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .edu-school { font-size: 15px; color: var(--accent); font-weight: 500; margin-bottom: 4px; }
+  .edu-meta { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--muted); }
+  .edu-badge {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 28px; color: var(--accent);
+    opacity: 0.3; font-weight: 900;
+    letter-spacing: -2px;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-left {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--muted);
+    letter-spacing: 2px;
+  }
+  .footer-right {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--accent3);
+    letter-spacing: 2px;
+  }
+
+  /* Print button */
+  .print-btn {
+    position: fixed; bottom: 30px; right: 30px;
+    background: var(--accent); color: var(--bg);
+    border: none; padding: 14px 24px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 3px; cursor: none;
+    text-transform: uppercase;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    transition: all 0.2s;
+    z-index: 100;
+  }
+  .print-btn:hover { background: #fff; box-shadow: 0 0 30px rgba(0,212,255,0.8); }
+
+  /* Animate-in */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: none; }
+
+  @media print {
+    body { background: #fff; color: #000; cursor: default; }
+    body::before, body::after { display: none; }
+    .cursor, .cursor-ring, .print-btn { display: none; }
+    :root {
+      --bg: #fff; --panel: #f5f5f5; --text: #111;
+      --accent: #0055aa; --muted: #555;
+      --border: #ccc; --accent3: #006633;
+    }
+    .name { text-shadow: none; }
+    .skill-group, .cert-card, .edu-card { clip-path: none; }
+  }
+
+  @media (max-width: 768px) {
+    .header-grid { grid-template-columns: 1fr; }
+    .contact-block { align-items: flex-start; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .skills-grid { grid-template-columns: 1fr; }
+    .cert-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div class="resume">
+
+  <!-- HEADER -->
+  <header class="header fade-up">
+    <div class="header-grid">
+      <div class="name-block">
+        <div class="name-label">// PROFILE INITIALIZED</div>
+        <h1 class="name">RENUKA<span>DEVI</span><br>PARUCHURI</h1>
+        <div class="title-line">Product Leader · Cloud Architect · DevOps Strategist</div>
+        <p class="tagline">15+ years bridging engineering and business — translating ambiguous problems into shipped products. Transitioning into Product Management to own roadmaps, strategy, and lifecycle delivery at scale.</p>
+      </div>
+      <div class="contact-block">
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          Texas, USA
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          346-250-5599
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">✉</div>
+          renukap.devops@gmail.com
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🔗</div>
+          linkedin.com/in/renukap
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar fade-up">
+    <div class="stat-cell">
+      <div class="stat-num" data-target="15">0</div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num" data-target="10">0</div>
+      <div class="stat-label">Companies Served</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num" data-target="5">0</div>
+      <div class="stat-label">Certifications</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num" data-target="4">0</div>
+      <div class="stat-label">Cloud Platforms</div>
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <section class="section fade-up">
+    <div class="section-header">
+      <span class="section-tag">// 01</span>
+      <h2 class="section-title">Core Competencies</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="skill-group-label">Product & Strategy</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Roadmap Ownership</span>
+          <span class="skill-tag">User Story Mapping</span>
+          <span class="skill-tag">Stakeholder Alignment</span>
+          <span class="skill-tag">Agile / Scrum</span>
+          <span class="skill-tag">Requirements Gathering</span>
+          <span class="skill-tag">Prioritization Frameworks</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">Cloud & Infrastructure</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Azure</span>
+          <span class="skill-tag">AWS</span>
+          <span class="skill-tag">Kubernetes</span>
+          <span class="skill-tag">Terraform</span>
+          <span class="skill-tag">Docker</span>
+          <span class="skill-tag">OpenStack</span>
+          <span class="skill-tag">AKS / EKS</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">DevOps & Tooling</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Jenkins</span>
+          <span class="skill-tag">CloudBees</span>
+          <span class="skill-tag">Azure DevOps</span>
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">Datadog</span>
+          <span class="skill-tag">Jira</span>
+          <span class="skill-tag">CI/CD Pipelines</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">Leadership</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Cross-functional Teams</span>
+          <span class="skill-tag">Executive Communication</span>
+          <span class="skill-tag">Vendor Management</span>
+          <span class="skill-tag">Risk Assessment</span>
+          <span class="skill-tag">Mentorship</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">Architecture</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Microservices</span>
+          <span class="skill-tag">Landing Zone Design</span>
+          <span class="skill-tag">IaC</span>
+          <span class="skill-tag">RBAC / Governance</span>
+          <span class="skill-tag">DR & HA</span>
+          <span class="skill-tag">Zero-Trust</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">Domains</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Research & Advisory</span>
+          <span class="skill-tag">FinTech</span>
+          <span class="skill-tag">Healthcare</span>
+          <span class="skill-tag">Retail</span>
+          <span class="skill-tag">Analytics</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="section fade-up">
+    <div class="section-header">
+      <span class="section-tag">// 02</span>
+      <h2 class="section-title">Professional Experience</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="exp-list" id="expList">
+
+      <div class="exp-item active">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <div>
+            <div class="exp-company">GARTNER</div>
+            <div class="exp-role">DevOps & Cloud Platform Lead</div>
+            <div class="exp-meta">Irving, TX</div>
+          </div>
+          <div style="text-align:right">
+            <div class="exp-date">JUN 2024 — PRESENT</div>
+            <div class="exp-toggle">+</div>
+          </div>
+        </div>
+        <div class="exp-body">
+          <ul class="exp-bullets">
+            <li>Built self-service Azure cloud capabilities, enabling engineering teams to provision services independently and reducing manual overhead at scale.</li>
+            <li>Led Azure architecture and service pattern development in partnership with DevOps Engineering — delivering compliant, automated cloud operations.</li>
+            <li>Served as escalation point for internal product teams; translated complex requirements into infrastructure delivery, resolving cross-team blockers.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <div>
+            <div class="exp-company">ESCALENT <span style="color:var(--muted);font-size:11px;font-family:'Share Tech Mono'">(via TEKSystems)</span></div>
+            <div class="exp-role">Senior Azure Engineer</div>
+            <div class="exp-meta">Remote</div>
+          </div>
+          <div style="text-align:right">
+            <div class="exp-date">NOV 2023 — MAY 2024</div>
+            <div class="exp-toggle">+</div>
+          </div>
+        </div>
+        <div class="exp-body">
+          <ul class="exp-bullets">
+            <li>Led post-acquisition cloud onboarding — defined Azure Landing Zone architecture, RBAC governance, and policy frameworks on a compressed timeline.</li>
+            <li>Designed active-active DR solution and drove post-migration cost optimization, right-sizing resources while maintaining SLAs within budget.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <div>
+            <div class="exp-company">GRANT THORNTON <span style="color:var(--muted);font-size:11px;font-family:'Share Tech Mono'">(via TEKSystems)</span></div>
+            <div class="exp-role">DevOps & Cloud Engineering Lead</div>
+            <div class="exp-meta">Remote</div>
+          </div>
+          <div style="text-align:right">
+            <div class="exp-date">MAY 2023 — OCT 2023</div>
+            <div class="exp-toggle">+</div>
+          </div>
+        </div>
+        <div class="exp-body">
+          <ul class="exp-bullets">
+            <li>Defined infrastructure delivery roadmap for a new product line — translated requirements into phased milestones across Azure, Kubernetes, and app teams.</li>
+            <li>Deployed microservices on AKS with Helm, Ingress, and Azure Private Link; implemented log analytics reducing MTTR significantly.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <div>
+            <div class="exp-company">NUANCE COMMUNICATIONS</div>
+            <div class="exp-role">Principal Cloud & Systems Developer</div>
+            <div class="exp-meta">Canada (Remote)</div>
+          </div>
+          <div style="text-align:right">
+            <div class="exp-date">APR 2020 — MAY 2023</div>
+            <div class="exp-toggle">+</div>
+          </div>
+        </div>
+        <div class="exp-body">
+          <ul class="exp-bullets">
+            <li>Led multi-year datacenter-to-Azure migration — defined sequencing, risk mitigation, and success metrics; delivered with minimal downtime across Dev and Production.</li>
+            <li>Drove CI/CD pipeline adoption across multiple product teams, reducing release cycle time and enabling faster iteration on customer-facing features.</li>
+            <li>Mentored cross-functional DevOps team; facilitated Agile ceremonies and aligned sprint goals to product objectives.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <div>
+            <div class="exp-company">BLOOMBERG / INNOSPHERE SDG</div>
+            <div class="exp-role">Senior DevOps Engineer</div>
+            <div class="exp-meta">Guelph, Canada</div>
+          </div>
+          <div style="text-align:right">
+            <div class="exp-date">DEC 2019 — APR 2020</div>
+            <div class="exp-toggle">+</div>
+          </div>
+        </div>
+        <div class="exp-body">
+          <ul class="exp-bullets">
+            <li>Authored CI/CD pipeline standards and branching/release strategies across Dev, QA, and Production, reducing deployment errors.</li>
+            <li>Built IaC architecture for new capabilities on VMware and AWS; introduced RBAC policies aligned to the cloud maturity model.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <div>
+            <div class="exp-company">CANADIAN TIRE / HIGHVAIL SYSTEMS</div>
+            <div class="exp-role">DevOps Consultant</div>
+            <div class="exp-meta">Toronto, Canada</div>
+          </div>
+          <div style="text-align:right">
+            <div class="exp-date">SEP 2017 — NOV 2019</div>
+            <div class="exp-toggle">+</div>
+          </div>
+        </div>
+        <div class="exp-body">
+          <ul class="exp-bullets">
+            <li>Automated retail store server deployment workflows using IaC, scaling infrastructure delivery across hundreds of locations.</li>
+            <li>Managed CI/CD pipelines end-to-end — supporting bug fixes, feature delivery, and image builds while coordinating across infrastructure and application teams.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <div>
+            <div class="exp-company">YAPSTONE / HIGHVAIL SYSTEMS</div>
+            <div class="exp-role">AWS Cloud Engineer</div>
+            <div class="exp-meta">Toronto, Canada</div>
+          </div>
+          <div style="text-align:right">
+            <div class="exp-date">JUL 2016 — SEP 2017</div>
+            <div class="exp-toggle">+</div>
+          </div>
+        </div>
+        <div class="exp-body">
+          <ul class="exp-bullets">
+            <li>Delivered end-to-end cloud migration strategy for a fintech firm — led stakeholder workshops, defined architecture, and managed AWS cloud budget and cost governance.</li>
+            <li>Trained the full engineering team on cloud-native tools, accelerating migration timelines and building organizational cloud capability.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <div>
+            <div class="exp-company">EARLIER ROLES <span style="color:var(--muted);font-size:11px;font-family:'Share Tech Mono'">(2010 – 2016)</span></div>
+            <div class="exp-role">Scotiabank · Security Compass · Mitel · Hitachi / Colruyt</div>
+            <div class="exp-meta">Toronto, Ottawa, Hyderabad</div>
+          </div>
+          <div style="text-align:right">
+            <div class="exp-date">2010 — 2016</div>
+            <div class="exp-toggle">+</div>
+          </div>
+        </div>
+        <div class="exp-body">
+          <ul class="exp-bullets">
+            <li><strong style="color:var(--accent)">Scotiabank:</strong> Designed and delivered a DBaaS proof-of-concept on OpenStack HA; presented findings to stakeholders to support infrastructure investment decisions.</li>
+            <li><strong style="color:var(--accent)">Security Compass:</strong> Designed training programs for Support Engineers; managed production SaaS environments ensuring 24/7 enterprise availability.</li>
+            <li><strong style="color:var(--accent)">Mitel:</strong> Ensured 99.99% infrastructure uptime through proactive monitoring, patching, and upgrades.</li>
+            <li><strong style="color:var(--accent)">Hitachi / Colruyt:</strong> Linux system administration, infrastructure operations, DR testing, and L2/L3 technical support across enterprise environments.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section class="section fade-up">
+    <div class="section-header">
+      <span class="section-tag">// 03</span>
+      <h2 class="section-title">Certifications</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="cert-grid">
+      <div class="cert-card">
+        <div class="cert-icon">☁</div>
+        <div class="cert-name">AWS Certified SysOps Administrator</div>
+        <div class="cert-issuer">AMAZON WEB SERVICES</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">⬡</div>
+        <div class="cert-name">HashiCorp Terraform Associate</div>
+        <div class="cert-issuer">HASHICORP</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">🔴</div>
+        <div class="cert-name">Red Hat Certified System Administrator</div>
+        <div class="cert-issuer">RED HAT · RHCSA</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">⚙</div>
+        <div class="cert-name">Red Hat Certified Ansible Automation</div>
+        <div class="cert-issuer">RED HAT · ANSIBLE</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">◈</div>
+        <div class="cert-name">Red Hat Certified OpenStack Administrator</div>
+        <div class="cert-issuer">RED HAT · OPENSTACK</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">◉</div>
+        <div class="cert-name">Product Management · In Progress</div>
+        <div class="cert-issuer">CONTINUING EDUCATION</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section class="section fade-up">
+    <div class="section-header">
+      <span class="section-tag">// 04</span>
+      <h2 class="section-title">Education</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="edu-card">
+      <div>
+        <div class="edu-degree">Bachelor of Technology — Computer Science & Engineering</div>
+        <div class="edu-school">Jawaharlal Nehru Technological University</div>
+        <div class="edu-meta">Hyderabad, India</div>
+      </div>
+      <div class="edu-badge">B.TECH</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-left">// RENUKADEVI PARUCHURI · RESUME v4.1</div>
+    <div class="footer-right" id="footerTime">LOADING...</div>
+  </footer>
+
+</div>
+
+<button class="print-btn" onclick="window.print()">⎙ PRINT / SAVE PDF</button>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animCursor() {
+    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animCursor);
+  }
+  animCursor();
+
+  // Toggle experience accordion
+  function toggleExp(header) {
+    const item = header.closest('.exp-item');
+    const isActive = item.classList.contains('active');
+    document.querySelectorAll('.exp-item').forEach(i => i.classList.remove('active'));
+    if (!isActive) item.classList.add('active');
+  }
+
+  // Animate counters
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target);
+    const suffix = el.dataset.target.includes('+') ? '+' : '';
+    let current = 0;
+    const step = target / 40;
+    const timer = setInterval(() => {
+      current = Math.min(current + Math.ceil(step), target);
+      el.textContent = current + (current === target && target >= 10 ? '+' : '');
+      if (current >= target) clearInterval(timer);
+    }, 40);
+  }
+
+  // Intersection observer for fade-up and counters
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        entry.target.querySelectorAll('[data-target]').forEach(animateCounter);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Live clock in footer
+  function updateTime() {
+    const now = new Date();
+    const ts = now.toISOString().replace('T', ' · ').substring(0, 22) + ' UTC';
+    document.getElementById('footerTime').textContent = '// ' + ts;
+  }
+  updateTime(); setInterval(updateTime, 1000);
+
+  // Hover effect on cursor over interactive elements
+  document.querySelectorAll('.exp-header, .skill-group, .cert-card, .print-btn').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      ring.style.width = '50px'; ring.style.height = '50px';
+      ring.style.borderColor = 'rgba(0,212,255,0.8)';
+    });
+    el.addEventListener('mouseleave', () => {
+      ring.style.width = '32px'; ring.style.height = '32px';
+      ring.style.borderColor = 'rgba(0,212,255,0.5)';
+    });
+  });
+</script>
+</body>
+</html>
